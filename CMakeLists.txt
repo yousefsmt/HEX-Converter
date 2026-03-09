@@ -18,15 +18,12 @@ add_compile_options(
     -Werror
     -Wshadow
     -Wnull-dereference
-    -fstack-protector-strong
-    # -Wdouble-promotion
+    -Wdouble-promotion
     -Wundef
     -fno-common
-    # -Wconversion
+    -Wconversion
     -fshort-enums
-    -fPIE
-    -fPIC
-    -O2
+    -fno-stack-protector
 )
 
 # =========================

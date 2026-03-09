@@ -30,25 +30,25 @@ help(void *pname) {
 static const char*
 decimal_converter(uint64_t value, uint8_t base)
 {
-    static char extracted_octal[12ul] = {'0'};
-    static char extracted_hex[9ul]    = {'0'};
+    static char extracted_octal[0x0cUL] = {'0'};
+    static char extracted_hex[0x09UL]    = {'0'};
     switch (base)
     {
-    case 8u:
+    case 0x08U:
     {
         const char     octal_refrence[] = "01234567";
         const uint64_t octal_mask       = 0x07UL;
-        uint8_t        idx              = 0x0BU;
-        uint8_t        check            = 0x00U;
-        for (size_t i = 0; i < 32ul; i += 3)
+        size_t         idx              = 0x0BU;
+        uint64_t       check            = 0x00U;
+        for (size_t i = 0x00UL; i < 0x20UL; i += 0x03UL)
         {
             check = (octal_mask & (value >> i));
             extracted_octal[idx] = octal_refrence[check];
-            if (idx == 0)break;
+            if (idx == 0x00UL)break;
             idx--;
         }
         // extracted_octal[12] = '\0';
-        for (size_t i = 0; i < 12UL; i++)
+        for (size_t i = 0x00UL; i < 0x0cUL; i++)
         {
             if (extracted_octal[i] != '0')
             {
@@ -58,21 +58,21 @@ decimal_converter(uint64_t value, uint8_t base)
         }
         return &extracted_octal[idx];
     }
-    case 16u:
+    case 0x10U:
     {
         const char     hex_refrence[]  = "0123456789ABCDEF";
         const uint64_t hex_mask        = 0x0fUL;
-        uint8_t        idx             = 0x08U;
-        uint8_t        check           = 0x00U;
-        for (size_t i = 0; i < 32ul; i += 4)
+        size_t         idx             = 0x08U;
+        uint64_t       check           = 0x00U;
+        for (size_t i = 0x00UL; i < 0x20UL; i += 0x04UL)
         {
             check = (hex_mask & (value >> i));
             extracted_hex[idx] = hex_refrence[check];
-            if (idx == 0)break;
+            if (idx == 0x00UL)break;
             idx--;
         }
         // extracted_hex[9UL] = '\0';
-        for (size_t i = 0; i < 9UL; i++)
+        for (size_t i = 0x00UL; i < 0x09UL; i++)
         {
             if (extracted_hex[i] != '0')
             {
@@ -94,8 +94,8 @@ decimal_converter(uint64_t value, uint8_t base)
 static const char*
 bin_u32(uint32_t value)
 {
-    static char buf[bits_num(value) * CHAR_BIT + 1];
-    for (uint32_t i = 0, mask = ((uint32_t)1 << (bits_num(value) - 1)); mask; mask >>= 1)
+    static char buf[bits_num(value) * CHAR_BIT + 0x01];
+    for (uint32_t i = 0x00U, mask = ((uint32_t)(0x01U) << (bits_num(value) - 0x01)); mask; mask >>= 0x01)
         buf[i++] = value & mask ? '1' : '0';
     buf[bits_num(value)] = '\0';
     return buf;
@@ -104,15 +104,15 @@ bin_u32(uint32_t value)
 static int
 convert_hex_number(converter_config* config) // Done
 {
-    uint64_t extracted_num = 0ul;
+    uint64_t extracted_num = 0x00UL;
 
     for (size_t i = config->idx; i < config->argc; i++)
     {
-        if (strlen(config->argv[i]) < 11ul && strncmp(config->argv[i], "0x", 2ul) == 0)
+        if (strlen(config->argv[i]) < 0x0bUL && strncmp(config->argv[i], "0x", 0x02UL) == 0x00)
         {
-            extracted_num = strtol(config->argv[i], NULL, 16);
-            if (extracted_num == 0ul){return -1;}
-            printf("HEX: %s     DEC: %ld     OCT: 0o%s     BIN: 0b%s\n", config->argv[i], extracted_num, decimal_converter(extracted_num, 8U), bin_u32((uint32_t)extracted_num));
+            extracted_num = (uint64_t)strtol(config->argv[i], NULL, 0x10);
+            if (extracted_num == 0x00UL){return -1;}
+            printf("HEX: %s     DEC: %ld     OCT: 0o%s     BIN: 0b%s\n", config->argv[i], extracted_num, decimal_converter(extracted_num, 0x08U), bin_u32((uint32_t)extracted_num));
         }
         else
         {
@@ -125,16 +125,16 @@ convert_hex_number(converter_config* config) // Done
 static int
 convert_binary_number(converter_config* config)
 {
-    uint64_t extracted_num = 0ul;
+    uint64_t extracted_num = 0x00UL;
 
     for (size_t i = config->idx; i < config->argc; i++)
     {
-        if (strlen(config->argv[i]) < 35ul && strncmp(config->argv[i], "0b", 2ul) == 0)
+        if (strlen(config->argv[i]) < 0x23UL && strncmp(config->argv[i], "0b", 0x02UL) == 0x00)
         {
-            config->argv[i] += 2;
-            extracted_num = strtol(config->argv[i], NULL, 2);
-            if (extracted_num == 0ul){return -1;}
-            printf("HEX: %s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 16U), extracted_num, decimal_converter(extracted_num, 8U), config->argv[i]);
+            config->argv[i] += 0x02;
+            extracted_num = (uint64_t)strtol(config->argv[i], NULL, 0x02);
+            if (extracted_num == 0x00UL){return -1;}
+            printf("HEX: %s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 0x10U), extracted_num, decimal_converter(extracted_num, 0x08U), config->argv[i]);
         }
         else
         {
@@ -147,15 +147,15 @@ convert_binary_number(converter_config* config)
 static int
 convert_decimal_number(converter_config* config)
 {
-    uint64_t extracted_num = 0ul;
+    uint64_t extracted_num = 0x00UL;
 
     for (size_t i = config->idx; i < config->argc; i++)
     {
-        if (strlen(config->argv[i]) < 10ul && strncmp(config->argv[i], "0x", 2ul) == 0)
+        if (strlen(config->argv[i]) < 0x0aUL && strncmp(config->argv[i], "0x", 0x02UL) == 0x00)
         {
-            extracted_num = strtol(config->argv[i], NULL, 16);
-            if (extracted_num == 0ul || extracted_num > 4294967295UL){return -1;}
-            printf("HEX: %s     DEC: %ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 16U), extracted_num, decimal_converter(extracted_num, 8U), bin_u32((uint32_t)extracted_num));
+            extracted_num = (uint64_t)strtol(config->argv[i], NULL, 0x10);
+            if (extracted_num == 0x00UL || extracted_num > 4294967295UL){return -1;}
+            printf("HEX: %s     DEC: %ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 0x10U), extracted_num, decimal_converter(extracted_num, 0x08U), bin_u32((uint32_t)extracted_num));
         }
         else
         {
@@ -168,16 +168,16 @@ convert_decimal_number(converter_config* config)
 static int
 convert_octal_number(converter_config* config)
 {
-    uint64_t extracted_num = 0ul;
+    uint64_t extracted_num = 0x00UL;
 
     for (size_t i = config->idx; i < config->argc; i++)
     {
-        if (strlen(config->argv[i]) < 13ul && strncmp(config->argv[i], "0o", 2ul) == 0)
+        if (strlen(config->argv[i]) < 0x0dUL && strncmp(config->argv[i], "0o", 0x02UL) == 0x00)
         {
-            config->argv[i] += 2;
-            extracted_num = strtol(config->argv[i], NULL, 8);
-            if (extracted_num == 0ul){return -1;}
-            printf("HEX: 0x%s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 16U), extracted_num, decimal_converter(extracted_num, 8U), bin_u32((uint32_t)extracted_num));
+            config->argv[i] += 0x02;
+            extracted_num = (uint64_t)strtol(config->argv[i], NULL, 0x08);
+            if (extracted_num == 0x00UL){return -1;}
+            printf("HEX: 0x%s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", decimal_converter(extracted_num, 0x10U), extracted_num, decimal_converter(extracted_num, 0x08U), bin_u32((uint32_t)extracted_num));
         }
         else
         {
@@ -190,15 +190,15 @@ convert_octal_number(converter_config* config)
 int
 parse_args(int argc, char* argv[])
 {
-    int              option_index = 0;
-    converter_config config       = {.argc = 0,
+    int              option_index = 0x00;
+    converter_config config       = {.argc = 0x00UL,
                                      .argv = NULL,
-                                     .idx = 0
+                                     .idx = 0x00UL
                                     };
-    int              c            = 0;
+    int              c            = 0x00;
 
     while (1) {
-        option_index = 0;
+        option_index = 0x00;
 
         static struct option long_options[] = {
             {"hex",     required_argument, 0,  'x'},
@@ -216,7 +216,7 @@ parse_args(int argc, char* argv[])
         {
             config.argc = (size_t)(argc);
             config.argv = (const char**)argv;
-            config.idx  = (strncmp(argv[optind-1], "-x", 2ul) == 0) ? (size_t)(optind) : (size_t)(optind-1);
+            config.idx  = (strncmp(argv[optind-0x01], "-x", 0x02UL) == 0x00) ? (size_t)(optind) : (size_t)(optind-0x01);
             if (convert_hex_number(&config) == -1)
             {
                 fprintf(stderr, "hex conversion failed.\n");
@@ -228,7 +228,7 @@ parse_args(int argc, char* argv[])
         {
             config.argc = (size_t)(argc);
             config.argv = (const char**)argv;
-            config.idx  = (strncmp(argv[optind-1], "-o", 2ul) == 0) ? (size_t)(optind) : (size_t)(optind-1);
+            config.idx  = (strncmp(argv[optind-0x01], "-o", 0x02UL) == 0x00) ? (size_t)(optind) : (size_t)(optind-0x01);
             if (convert_octal_number(&config) == -1)
             {
                 fprintf(stderr, "octal conversion failed.\n");
@@ -240,7 +240,7 @@ parse_args(int argc, char* argv[])
         {
             config.argc = (size_t)(argc);
             config.argv = (const char**)argv;
-            config.idx  = (strncmp(argv[optind-1], "-d", 2ul) == 0) ? (size_t)(optind) : (size_t)(optind-1);
+            config.idx  = (strncmp(argv[optind-0x01], "-d", 0x02UL) == 0x00) ? (size_t)(optind) : (size_t)(optind-0x01);
             if (convert_decimal_number(&config) == -1)
             {
                 fprintf(stderr, "hex conversion failed.\n");
@@ -252,7 +252,7 @@ parse_args(int argc, char* argv[])
         {
             config.argc = (size_t)(argc);
             config.argv = (const char**)argv;
-            config.idx  = (strncmp(argv[optind-1], "-b", 2ul) == 0) ? (size_t)(optind) : (size_t)(optind-1);
+            config.idx  = (strncmp(argv[optind-0x01], "-b", 0x02UL) == 0x00) ? (size_t)(optind) : (size_t)(optind-0x01);
             if (convert_binary_number(&config) == -1)
             {
                 fprintf(stderr, "binary conversion failed.\n");
@@ -261,7 +261,7 @@ parse_args(int argc, char* argv[])
             break;
         }
         case '?':
-            help(argv[optind-1]);
+            help(argv[optind-0x01]);
             break;
         default:
             printf("?? getopt returned character code 0%o ??\n", c);
