@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "handler.h"
 
 int
@@ -10,7 +8,7 @@ main(int argc, char* argv[])
       is_correct = parse_args(argc, argv);
       if (is_correct)
       {
-            fprintf(stderr, "ERROR: cannot parse args.\n");
+            debug_msg("cannot parse args.");
       }
       
       return 0;
