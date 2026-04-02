@@ -23,7 +23,8 @@
 #include <limits.h>
 
 #define bits_num(value) (sizeof(value) * CHAR_BIT)
- 
+
+typedef struct timespec timespec;
 typedef struct
 {
     size_t       argc;

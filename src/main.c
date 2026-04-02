@@ -11,5 +11,5 @@ main(int argc, char* argv[])
             debug_msg("cannot parse args.");
       }
       
-      return 0;
+      return 0x00;
 }
