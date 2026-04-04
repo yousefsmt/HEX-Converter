@@ -62,6 +62,8 @@ target_link_libraries(${PROJECT_NAME}
         m
 )
 
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
 # =========================
 # Testing
 # =========================

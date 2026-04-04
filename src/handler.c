@@ -14,16 +14,30 @@
 void
 debug_msg(const char* fmt, ...)
 {
-    struct timespec ts;
-    timespec_get(&ts, TIME_UTC);
-    char buff[100UL] = {0};
-    strftime(buff, sizeof buff, "%D %T", gmtime(&ts.tv_sec));
+    int      is_correct   = 0x00;
+    char     buff[0x64UL] = {'0'};
+    timespec ts           = {.tv_nsec = 0x00L, .tv_sec = 0x00L};
+
+    is_correct = timespec_get(&ts, TIME_UTC);
+    if (is_correct == 0x00)
+    {
+        perror("timespec_get failed");
+        return;
+    }
+
+    
+    is_correct = (int)strftime(buff, sizeof buff, "%D %T", gmtime(&ts.tv_sec));
+    if (is_correct == 0x00)
+    {
+        perror("strftime failed");
+        return;
+    }
 
     va_list args1;
     va_start(args1, fmt);
     va_list args2;
     va_copy(args2, args1);
-    char buf[1+vsnprintf(NULL, 0x00UL, fmt, args1)];
+    char buf[0x01+vsnprintf(NULL, 0x00UL, fmt, args1)];
     va_end(args1);
     vsnprintf(buf, sizeof buf, fmt, args2);
     va_end(args2);
@@ -45,16 +59,14 @@ help(void *pname) {
   -b, --binary \n\
         Set binary number. [0b0...00-0b1...11 max 32 Bit]\n\
   -h, --help\n\
-        Display help message and exit.\n\
-  --license\n\
-        Display the license information.\n", (char*) pname);
-  exit(0);
+        Display help message and exit.\n", (char*) pname);
+  exit(0x00);
 }
 
 static const char*
 decimal_converter(uint64_t value, uint8_t base)
 {
-    static char extracted_octal[0x0cUL] = {'0'};
+    static char extracted_octal[0x0CUL] = {'0'};
     static char extracted_hex[0x09UL]   = {'0'};
     switch (base)
     {
@@ -122,7 +134,17 @@ bin_u32(uint32_t value)
         buf[i++] = value & mask ? '1' : '0';
     }
     buf[bits_num(value)] = '\0';
-    return buf;
+
+    char* ret = strpbrk(buf, "1");
+    if (ret == NULL)
+    {
+        debug_msg("bit conversion failed");
+        return "0";
+    }
+    else
+    {
+        return ret;
+    }
 }
 
 static int
@@ -141,6 +163,7 @@ convert_hex_number(converter_config* config)
                 debug_msg("extract hex string to number failed because is zero or out of range.");
                 return -1;
             }
+            // TODO: add constant distance between each base for each input number with different num count
             printf("HEX: %s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", config->argv[i], extracted_num, decimal_converter(extracted_num, 0x08U), bin_u32((uint32_t)extracted_num));
         }
         else if (strncmp(config->argv[i], "-", 0x01UL) == 0x00)
@@ -149,7 +172,7 @@ convert_hex_number(converter_config* config)
         }
         else
         {
-            debug_msg("your input hex number cannot use 0x preffix or number count not valid.");
+            debug_msg("this arg '%s' not valid, you must use '0x' preffix.", config->argv[i]);
             return -1;
         }
     }
@@ -181,7 +204,7 @@ convert_binary_number(converter_config* config)
         }
         else
         {
-            debug_msg("your input binary number cannot use 0b preffix or number count not valid.");
+            debug_msg("this arg '%s' not valid, you must use '0b' preffix.", config->argv[i]);
             return -1;
         }
     }
@@ -213,7 +236,7 @@ convert_decimal_number(converter_config* config)
         }
         else
         {
-            debug_msg("your input decimal number cannot use 0d preffix or number count not valid.");
+            debug_msg("this arg '%s' not valid, you must use '0d' preffix.", config->argv[i]);
             return -1;
         }
     }
@@ -245,7 +268,7 @@ convert_octal_number(converter_config* config)
         }
         else
         {
-            debug_msg("your input octal number cannot use 0o preffix or number count not valid.");
+            debug_msg("this arg '%s' not valid, you must use '0o' preffix.", config->argv[i]);
             return -1;
         }
     }
@@ -333,6 +356,8 @@ parse_args(int argc, char* argv[])
             debug_msg("argument parser returned character code 0%o is NOT valid!!!", c);
         }
     }
+
+    if (argc == 1){help("no args");}
 
     return 0;
 }
