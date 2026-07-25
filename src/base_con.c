@@ -92,8 +92,8 @@ static void hex_dump(const char *str)
         debug_msg("extract hex string to number failed because is zero or out of range.");
         return;
     }
-    printf("HEX: %s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n", str, extracted_num,
-            decimal_converter(extracted_num, 8), bin_u32((uint32_t)extracted_num));
+    printf("HEX: %s%*sDEC: 0d%ld%*sOCT: 0o%s%*sBIN: 0b%s\n", str, 5,"",extracted_num,5,"",
+            decimal_converter(extracted_num, 8),5,"",bin_u32((uint32_t)extracted_num));
 }
 
 static void oct_dump(const char *str)
@@ -107,9 +107,9 @@ static void oct_dump(const char *str)
         debug_msg("extract octal string to number failed because is zero or out of range.");
         return;
     }
-    printf("HEX: 0x%s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n",
-        decimal_converter(extracted_num, 16),
-        extracted_num, decimal_converter(extracted_num, 8), bin_u32((uint32_t)extracted_num));
+    printf("HEX: %s%*sDEC: 0d%ld%*sOCT: 0o%s%*sBIN: 0b%s\n",
+        decimal_converter(extracted_num, 16), 5,"",extracted_num,5,"",
+        decimal_converter(extracted_num, 8),5,"",bin_u32((uint32_t)extracted_num));
 }
 
 static void dec_dump(const char *str)
@@ -123,9 +123,9 @@ static void dec_dump(const char *str)
         debug_msg("extract decimal string to number failed because is zero or out of range.");
         return;
     }
-    printf("HEX: 0x%s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n",
-            decimal_converter(extracted_num, 16),
-            extracted_num, decimal_converter(extracted_num, 8), bin_u32((uint32_t)extracted_num));
+    printf("HEX: %s%*sDEC: 0d%ld%*sOCT: 0o%s%*sBIN: 0b%s\n",
+            decimal_converter(extracted_num, 16), 5,"",extracted_num,5,"",
+            decimal_converter(extracted_num, 8),5,"",bin_u32((uint32_t)extracted_num));
 }
 
 static void bin_dump(const char *str)
@@ -138,9 +138,9 @@ static void bin_dump(const char *str)
         debug_msg("extract binary string to number failed because is zero or out of range.");
         return;
     }
-    printf("HEX: 0x%s     DEC: 0d%ld     OCT: 0o%s     BIN: 0b%s\n",
-        decimal_converter(extracted_num, 16),
-        extracted_num, decimal_converter(extracted_num, 8), str);
+    printf("HEX: %s%*sDEC: 0d%ld%*sOCT: 0o%s%*sBIN: 0b%s\n",
+           decimal_converter(extracted_num, 16), 5,"",extracted_num,5,"",
+           decimal_converter(extracted_num, 8),5,"",str);
 }
 
 void num_dumps(struct config_t *config)
