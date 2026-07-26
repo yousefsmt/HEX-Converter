@@ -1,15 +1,26 @@
-#include "handler.h"
+#include <stdio.h>
+#include <stdint.h>
 
-int
-main(int argc, char* argv[])
+#include "base_con.h"
+#include "parser.h"
+#include "log.h"
+
+int main(int argc, char *argv[])
 {
-      int is_correct = 0x00;
+    struct config_t config;
+    int err;
 
-      is_correct = parse_args(argc, argv);
-      if (is_correct)
-      {
-            debug_msg("cannot parse args.");
-      }
-      
-      return 0x00;
+    init_config(&config);
+
+    err = parse_num_args(&config, argc, argv);
+    if (err < 0) {
+        debug_msg("parse argument failed!");
+        return -1;
+    }
+
+    num_dumps(&config);
+
+    free_resource(&config);
+
+    return 0;
 }
