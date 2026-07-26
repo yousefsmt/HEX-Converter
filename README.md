@@ -4,7 +4,7 @@
 ## Introduction
 
 This repository implements a base number converter for four basis octal, hex, decimal and binary.
-This code is a CLI and can be installed in Linux distro 
+This code is a CLI and can be installed in Linux distro
 
 ---
 
@@ -52,9 +52,9 @@ HEX Converter v0.1.0 Developed by: Yousef.smt
         Set hex number. [0x00000000-0xFFFFFFFF]
   -o, --octal
         Set octal number. [0o00000000000-0o37777777777]
-  -d, --decimal 
+  -d, --decimal
         Set decimal number. [0-4294967295]
-  -b, --binary 
+  -b, --binary
         Set binary number. [0b0...00-0b1...11 max 32 Bit]
   -h, --help
         Display help message and exit.
@@ -70,7 +70,7 @@ Application this code for me is embedded system because when I need to write bar
 
 ## Contribute
 
-Everyone can improve this code and I happy to contibute with just you need fork this project create branch and fix bug are add feature then create pull request and I check it, Is it good? If yes, I merge it.
+Everyone can improve this code and I happy to contribute with just you need fork this project create branch and fix bug are add feature then create pull request and I check it, Is it good? If yes, I merge it.
 Good Luck.
 
 
